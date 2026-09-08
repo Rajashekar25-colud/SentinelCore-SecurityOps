@@ -1,63 +1,17 @@
-package com.sentinelcore.secureops.incident.controller;
-
-import com.sentinelcore.secureops.incident.model.Incident;
-import com.sentinelcore.secureops.incident.service.IncidentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/incidents")
-public class IncidentController {
-
-  @Autowired
-  private IncidentService incidentService;
-
-  // Get all incidents — all authenticated roles with INCIDENT_VIEW
-  @GetMapping
-  @PreAuthorize("hasAuthority('INCIDENT_VIEW')")
-  public List<Incident> getAllIncidents() {
-    return incidentService.getAllIncidents();
-  }
-
-  // Create a new incident — roles that can create
-  @PostMapping
-  @PreAuthorize("hasAuthority('INCIDENT_CREATE')")
-  public Incident createIncident(@RequestBody Incident incident) {
-    return incidentService.createIncident(incident);
-  }
-
-  // Get incident by ID
-  @GetMapping("/{id}")
-  @PreAuthorize("hasAuthority('INCIDENT_VIEW')")
-  public Incident getIncidentById(@PathVariable Long id) {
-    return incidentService.getIncidentById(id);
-  }
-
-  // Update incident — roles that can manage/edit
-  @PutMapping("/{id}")
-  @PreAuthorize("hasAuthority('INCIDENT_MANAGE')")
-  public Incident updateIncident(@PathVariable Long id,
-                                 @RequestBody Incident incident) {
-    return incidentService.updateIncident(id, incident);
-  }
-
-  // Delete incident — only roles with full delete permission
-  @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthority('INCIDENT_DELETE')")
-  public void deleteIncident(@PathVariable Long id) {
-    incidentService.deleteIncident(id);
-  }
-
-  // Dashboard stats — any role that can view incidents
-  @GetMapping("/dashboard")
-  @PreAuthorize("hasAuthority('INCIDENT_VIEW')")
-  public com.sentinelcore.secureops.dashboard.dto.IncidentStatusDTO getIncidentDashboard() {
-    java.util.List<com.sentinelcore.secureops.dashboard.dto.StatusCount> counts = incidentService.getIncidentStatusCounts();
-    com.sentinelcore.secureops.dashboard.dto.IncidentStatusDTO dto = new com.sentinelcore.secureops.dashboard.dto.IncidentStatusDTO();
-    dto.setStatusCounts(counts != null ? counts : java.util.List.of());
-    return dto;
-  }
+package com.sentinelcore.secureops.controller;
+import com.sentinelcore.secureops.aop.Auditable; import com.sentinelcore.secureops.dto.*; import com.sentinelcore.secureops.model.*; import com.sentinelcore.secureops.service.IncidentService;
+import jakarta.validation.Valid; import org.springframework.http.ResponseEntity; import org.springframework.security.access.prepost.PreAuthorize; import org.springframework.security.core.Authentication; import org.springframework.web.bind.annotation.*; import java.util.List;
+@RestController @RequestMapping("/api/incidents") public class IncidentController {
+ private final IncidentService service; public IncidentController(IncidentService service){this.service=service;}
+ @GetMapping @PreAuthorize("hasAuthority('INCIDENT_VIEW')") public List<Incident> all(){return service.getAllIncidents();}
+ @PostMapping @PreAuthorize("hasAuthority('INCIDENT_CREATE')") @Auditable(action="Create Incident") public Incident create(@RequestBody Incident i,Authentication a){return service.createIncident(i,a.getName());}
+ @GetMapping("/{id}") @PreAuthorize("hasAuthority('INCIDENT_VIEW')") public Incident one(@PathVariable Long id){return service.getIncidentById(id);}
+ @PutMapping("/{id}") @PreAuthorize("hasAuthority('INCIDENT_MANAGE')") @Auditable(action="Update Incident") public Incident update(@PathVariable Long id,@RequestBody Incident i,Authentication a){return service.updateIncident(id,i,a.getName());}
+ @DeleteMapping("/{id}") @PreAuthorize("hasAuthority('INCIDENT_DELETE')") @Auditable(action="Delete Incident") public ResponseEntity<Void> delete(@PathVariable Long id,Authentication a){service.deleteIncident(id,a.getName());return ResponseEntity.noContent().build();}
+ @PostMapping("/{id}/status") @PreAuthorize("hasAuthority('INCIDENT_MANAGE')") @Auditable(action="Change Incident Status") public Incident status(@PathVariable Long id,@Valid @RequestBody IncidentStatusRequest r,Authentication a){return service.changeStatus(id,r,a.getName());}
+ @PostMapping("/{id}/assign") @PreAuthorize("hasAuthority('INCIDENT_MANAGE')") @Auditable(action="Assign Incident") public Incident assign(@PathVariable Long id,@Valid @RequestBody IncidentAssignmentRequest r,Authentication a){return service.assign(id,r,a.getName());}
+ @PostMapping("/{id}/resolve") @PreAuthorize("hasAuthority('INCIDENT_RESOLVE')") @Auditable(action="Resolve Incident") public Incident resolve(@PathVariable Long id,@RequestBody(required=false) IncidentStatusRequest r,Authentication a){return service.resolve(id,r==null?null:r.getResolutionNotes(),a.getName());}
+ @GetMapping("/{id}/sla") @PreAuthorize("hasAuthority('INCIDENT_VIEW')") public IncidentSlaDTO sla(@PathVariable Long id){return service.getSla(id);}
+ @GetMapping("/{id}/history") @PreAuthorize("hasAuthority('INCIDENT_VIEW')") public List<IncidentHistory> history(@PathVariable Long id){return service.getHistory(id);}
+ @GetMapping("/dashboard") @PreAuthorize("hasAuthority('INCIDENT_VIEW')") public IncidentStatusDTO dashboard(){IncidentStatusDTO d=new IncidentStatusDTO();d.setStatusCounts(service.getIncidentStatusCounts());return d;}
 }
