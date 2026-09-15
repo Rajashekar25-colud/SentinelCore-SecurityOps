@@ -66,14 +66,8 @@ const authService = {
     },
 
     logout: () => {
-        const csrf = document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1];
-        const body = new URLSearchParams();
-        if (csrf) body.append('_csrf', decodeURIComponent(csrf));
-
-        return axiosInstance.post('/logout', body, {
+        return axiosInstance.post('/logout', null, {
             withCredentials: true,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            validateStatus: () => true,
         });
     },
 
