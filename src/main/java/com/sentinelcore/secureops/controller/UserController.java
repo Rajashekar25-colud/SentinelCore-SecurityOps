@@ -49,9 +49,6 @@ public class UserController {
             if (request.getPassword().length() < 6) {
                 return ResponseEntity.badRequest().body(Map.of("message", "Password must be at least 6 characters."));
             }
-            if (request.getRole() == null || request.getRole().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body(Map.of("message", "Role is required."));
-            }
             if (request.getEmail() != null && !request.getEmail().trim().isEmpty()) {
                 if (!request.getEmail().matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")) {
                     return ResponseEntity.badRequest().body(Map.of("message", "Please enter a valid email address."));
@@ -65,8 +62,7 @@ public class UserController {
                 request.getFirstName(),
                 request.getLastName(),
                 request.getPhone(),
-                request.getOrganization(),
-                request.getRole()
+                request.getOrganization()
             );
 
             log.info("User registered successfully: {}", registered.getUsername());
@@ -76,8 +72,12 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
             log.error("Unhandled exception during user registration for username {}:", request.getUsername(), e);
+            // Surface the real cause instead of a generic hardcoded message so the
+            // actual failure (missing DB connection, missing ROLE_VIEWER, constraint
+            // violation, etc.) is visible in the API response and not just the server log.
+            String rootMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("message", "Internal server error. Database connection failed or invalid query."));
+                    .body(Map.of("message", "Registration failed: " + rootMessage));
         }
     }
 

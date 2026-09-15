@@ -122,14 +122,14 @@ export function AuthProvider({ children }) {
     }, [fetchCurrentUser]);
 
     /**
-     * Logout: POST to /logout and clear local state.
-     * Callers own navigation so a logout click triggers one redirect.
+     * Logout: POST to /logout, clear local state, redirect to login page.
      */
     const logout = useCallback(async () => {
         try {
             await authService.logout();
         } catch { /* ignore errors during logout */ }
         setUser(null);
+        window.location.href = '/login?logout';
     }, []);
 
     const isAuthenticated = !!user;

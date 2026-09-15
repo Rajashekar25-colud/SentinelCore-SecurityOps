@@ -32,7 +32,7 @@ public class UserService {
     @Transactional
     public User register(String username, String email, String password,
                          String firstName, String lastName, String phone,
-                         String organization, String role) {
+                         String organization) {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Username already exists: " + username);
         }
@@ -46,10 +46,13 @@ public class UserService {
         user.setPhone(phone);
         user.setOrganization(organization);
 
-        // Assign the selected role
-        if (role != null && !role.isBlank()) {
-            roleRepository.findByName(role).ifPresent(r -> user.getRoles().add(r));
-        }
+        // Every self-registration starts with the least-privileged role.
+        // Only an administrator can assign a different role later.
+        roleRepository.findByName("ROLE_VIEWER")
+                .ifPresentOrElse(
+                        role -> user.getRoles().add(role),
+                        () -> { throw new IllegalStateException("Default ROLE_VIEWER is not configured"); }
+                );
         return userRepository.save(user);
     }
 
