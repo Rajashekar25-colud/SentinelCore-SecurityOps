@@ -1,4 +1,4 @@
-package com.sentinelcore.secureops.incident.dto;
+package com.sentinelcore.secureops.dto;
 
 import java.time.LocalDateTime;
 
