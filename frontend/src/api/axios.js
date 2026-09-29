@@ -39,6 +39,7 @@ console.log("API_BASE =", API_BASE);
 const axiosInstance = axios.create({
     baseURL: API_BASE,       // '' in dev (Vite proxy), Render URL in production
     withCredentials: true,   // Send JSESSIONID cookie on every request
+    timeout: 5000,
     headers: {
         'Content-Type': 'application/json',
     },

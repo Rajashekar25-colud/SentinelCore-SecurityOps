@@ -37,7 +37,7 @@ import ProfilePage from './pages/Profile/ProfilePage.jsx';
 function ProtectedRoute({ children, permission, role }) {
   const { isAuthenticated, loading, hasPermission, hasRole } = useAuth();
 
-  if (loading) return null; // AuthContext is still hydrating — render nothing
+  if (loading) return <div className="app-loading">Loading SentinelCore SecureOps...</div>;
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
@@ -58,7 +58,7 @@ function ProtectedRoute({ children, permission, role }) {
  */
 function PublicRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
-  if (loading) return null;
+  if (loading) return <div className="app-loading">Loading SentinelCore SecureOps...</div>;
   if (isAuthenticated) return <Navigate to="/dashboard" replace />;
   return children;
 }

@@ -8,7 +8,15 @@ export function AIProvider({ children }) {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState(() => {
         const saved = sessionStorage.getItem('sentinelcore_ai_chat');
-        return saved ? JSON.parse(saved) : [];
+        if (!saved) return [];
+
+        try {
+            const parsed = JSON.parse(saved);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch {
+            sessionStorage.removeItem('sentinelcore_ai_chat');
+            return [];
+        }
     });
     const [loading, setLoading] = useState(false);
     const location = useLocation();
