@@ -1,199 +1,781 @@
-# SentinelCore-SecureOps Enterprise Dashboard
+# SentinelCore-SecureOps
 
-SentinelCore-SecureOps is a production-grade SecOps orchestration platform designed to enable Security Operation Centers (SOCs) to monitor, manage, and mitigate security threats, compliance issues, and infrastructure metrics in real time. It features a modern, responsive React Single Page Application (SPA) frontend integrated with a secure, aspect-audited Spring Boot 3 Java backend and a PostgreSQL database.
+## Cloud Security Monitoring System with Incident Management Assistance
 
----
+SentinelCore-SecureOps is a production-grade **Security Operations (SecOps) orchestration platform** designed to help Security Operations Centers (SOCs) monitor, manage, and respond to security threats, incidents, vulnerabilities, compliance requirements, and infrastructure metrics.
 
-## 🚀 Key Features
-
-*   **Executive Dashboard**: Real-time aggregation of key security metrics including total enrolled assets, active incident tick counters, critical vulnerability CVE counts, security alerts, and audit records.
-*   **Asset Management**: Full CRUD capability for tracking endpoints, databases, servers, and network firewalls, with unique IP address validation and real-time interface metrics (CPU, Memory, Disk, and Network telemetry).
-*   **Incident Response Queue**: Detailed incident workflows with custom ticket codes (e.g. `INC-889`), severity scaling (Critical, High, Medium, Low), SLA monitoring, technician assignments, and status updates (Open, Investigating, Resolved).
-*   **Vulnerability Tracking**: Repository of active CVE vulnerability logs coupled with specific remediation instructions and automated patch deployment actions.
-*   **Compliance Posture Management**: Operational readiness audit dashboard backing standards like ISO/IEC 27001:2022, SOC 2 Type II, and PCI DSS v4.0.
-*   **Audit Logger (Spring AOP)**: Passive audit tracing powered by Aspect-Oriented Programming (AOP). Truncates host User-Agent strings dynamically to prevent DB buffer runs.
-*   **AI Chatbot Assistant**: Interactive sidebar assistant that analyzes natural queries (e.g., "how do I add a new asset?") and guides users through dashboard views.
-*   **Automated Document Reports**: PDF template builder using OpenPDF, complete with scheduled execution trackers (`ReportScheduler`).
-*   **SMTP Mail Operations**: Email notifier for system alerts and critical incident updates.
+The platform provides a modern **React Single Page Application (SPA)** frontend integrated with a secure **Spring Boot 3 backend** and **PostgreSQL database**. It implements role-based access control (RBAC), incident management, vulnerability tracking, audit logging, automated reporting, email notifications, and an AI-powered SecOps assistant.
 
 ---
 
-## 🛠️ System Architecture
+## 🚀 Live Deployment
+
+### 🌐 Deployed Application
+
+**SentinelCore-SecureOps:**
+https://sentinel-core-secure-ops-f7k2.vercel.app/login
+
+The deployed frontend provides access to the SentinelCore-SecureOps security operations dashboard.
+
+> **Note:** The application requires valid backend services and database connectivity for all features to operate correctly.
+
+### 🔐 Default Development Credentials
+
+For local development/testing:
+
+```text
+Username: admin
+Password: admin123
+Role: ROLE_SUPER_ADMIN
+```
+
+> ⚠️ These are default development credentials. Change or disable them before using the application in a production environment.
+
+---
+
+# 🚀 Key Features
+
+## 📊 Executive Dashboard
+
+Provides real-time aggregation of important security and infrastructure metrics, including:
+
+* Total enrolled assets
+* Active security incidents
+* Critical CVE vulnerabilities
+* Security alerts
+* Audit records
+* Incident status statistics
+* Incident severity statistics
+* Incident trend information
+* Recent incidents and alerts
+
+---
+
+## 🖥️ Asset Management
+
+Provides complete CRUD operations for managing infrastructure assets such as:
+
+* Endpoints
+* Databases
+* Servers
+* Network firewalls
+
+The system supports:
+
+* Unique IP address validation
+* Asset creation
+* Asset modification
+* Asset deletion
+* Asset status tracking
+* CPU telemetry
+* Memory telemetry
+* Disk telemetry
+* Network telemetry
+
+---
+
+## 🚨 Incident Response Management
+
+The Incident Response Queue provides a structured workflow for managing security incidents.
+
+Features include:
+
+* Custom incident ticket codes such as `INC-889`
+* Severity classification:
+
+  * Critical
+  * High
+  * Medium
+  * Low
+* SLA monitoring
+* Technician assignment
+* Incident status tracking:
+
+  * Open
+  * Investigating
+  * Resolved
+* Incident creation
+* Incident management
+* Incident resolution
+* Incident deletion
+
+---
+
+## 🛡️ Vulnerability Tracking
+
+The platform maintains a repository of active CVE vulnerabilities.
+
+Features include:
+
+* CVE vulnerability tracking
+* Host-to-vulnerability correlation
+* Severity information
+* Remediation instructions
+* Vulnerability management
+* Automated patch deployment actions
+
+---
+
+## 📋 Compliance Posture Management
+
+The system provides an operational compliance dashboard supporting security standards such as:
+
+* ISO/IEC 27001:2022
+* SOC 2 Type II
+* PCI DSS v4.0
+
+---
+
+## 📝 Audit Logging
+
+SentinelCore-SecureOps implements passive audit tracing using **Spring Aspect-Oriented Programming (AOP)**.
+
+The system automatically records important application actions through auditable controller checkpoints.
+
+The audit system also handles long User-Agent strings by truncating them before storing them in the database.
+
+---
+
+## 🤖 AI SecOps Assistant
+
+The platform includes an interactive AI assistant that helps users navigate and understand the security operations dashboard.
+
+Example queries include:
+
+```text
+How do I add a new asset?
+```
+
+The assistant can guide users through relevant dashboard operations and workflows.
+
+---
+
+## 📄 Automated PDF Reports
+
+The system provides automated security report generation using **OpenPDF**.
+
+Features include:
+
+* PDF report generation
+* Report templates
+* Scheduled report execution
+* Security and operational reporting
+
+The application uses a `ReportScheduler` for scheduled report execution.
+
+---
+
+## 📧 SMTP Email Notifications
+
+The platform integrates with SMTP services to send notifications for:
+
+* Security alerts
+* Critical incidents
+* System events
+
+---
+
+# 🏗️ System Architecture
 
 ```mermaid
 graph TD
-    %% Frontend Layer
-    subgraph Frontend [React SPA Client - Vite]
-        UI[Dashboard UI / Theme Engine]
-        AC[Auth Context / RBAC Guard]
-        AI[AI Chatbot Client]
+
+    subgraph Frontend["Frontend - React SPA / Vite"]
+        UI["Dashboard UI / Theme Engine"]
+        AC["Auth Context / RBAC Guard"]
+        AI["AI Chatbot Client"]
     end
 
-    %% API Layer
-    subgraph Backend [REST Service - Spring Boot 3]
-        SEC[Spring Security Filter / RBAC Rules]
-        AOP[Audit Logging Aspect]
-        CTRL[REST Controllers]
-        SERV[Business Services]
-        SCH[Report Scheduler]
+    subgraph Backend["Backend - Spring Boot 3"]
+        SEC["Spring Security / RBAC"]
+        CTRL["REST Controllers"]
+        AOP["Audit Logging Aspect"]
+        SERV["Business Services"]
+        SCH["Report Scheduler"]
     end
 
-    %% Data & External
-    subgraph DB [Data Store]
-        POSTGRES[(PostgreSQL Database)]
+    subgraph Database["Database"]
+        POSTGRES[("PostgreSQL")]
     end
 
-    subgraph External [External Services]
-        SMTP[SMTP Gateway]
+    subgraph External["External Services"]
+        SMTP["SMTP Gateway"]
+        PDF["OpenPDF"]
     end
 
-    %% Interactions
-    UI -->|JSON / Fetch| SEC
+    UI -->|"JSON / Fetch"| SEC
     SEC --> CTRL
-    CTRL -->|AOP Interceptor| AOP
+    CTRL -->|"AOP Interceptor"| AOP
     AOP --> SERV
-    SERV -->|JPA Repositories| POSTGRES
-    SERV -->|OpenPDF| PDF[PDF Generator]
-    SERV -->|Spring Mail| SMTP
-    SCH -->|cron| SERV
-    AI -->|Fetch| CTRL
+    SERV -->|"JPA Repositories"| POSTGRES
+    SERV -->|"OpenPDF"| PDF
+    SERV -->|"Spring Mail"| SMTP
+    SCH -->|"Scheduled Jobs"| SERV
+    AI -->|"API Requests"| CTRL
 ```
 
 ---
 
-## 💻 Tech Stack
+# 🛠️ Technology Stack
 
-### Backend
-*   **Framework**: Spring Boot 3.4.7
-*   **Language**: Java 17
-*   **Security & Auth**: Spring Security 6 (Custom User Details Service, `@PreAuthorize` authorization guards)
-*   **Database Integration**: Spring Data JPA & Hibernate
-*   **Relational Database Engine**: PostgreSQL
-*   **Aspect Auditing**: Spring AOP
-*   **Notification Engine**: Spring Mail Starters
-*   **Document Generation Engine**: OpenPDF (v2.0.3)
+## Backend
 
-### Frontend
-*   **Framework**: React (using Vite)
-*   **Routing**: React Router DOM (Declarative Router)
-*   **Global Stores**: React Context API (`AuthContext`)
-*   **Visual Aesthetics**: Sleek dark theme, responsive grid layouts, and custom micro-animations built using vanilla CSS
-*   **UI Alerts**: SweetAlert2 (denied authorizations) & modern toast notification containers
+| Technology        | Purpose                          |
+| ----------------- | -------------------------------- |
+| Java 17           | Backend programming language     |
+| Spring Boot 3.4.7 | Backend framework                |
+| Spring Security 6 | Authentication and authorization |
+| Spring Data JPA   | Database persistence             |
+| Hibernate         | ORM                              |
+| PostgreSQL        | Relational database              |
+| Spring AOP        | Audit logging                    |
+| Spring Mail       | Email notifications              |
+| OpenPDF 2.0.3     | PDF generation                   |
+| Maven             | Dependency management and build  |
 
 ---
 
-## 🔐 Security & Role-Based Access Control (RBAC)
+## Frontend
 
-SentinelCore implements a granular authorization engine assigning operations to specfic permissions. The application defines **nineteen distinct permissions** mapping to **nine enterprise operational roles**.
-
-### Permissions Outline
-*   **Logins & Auditing**: `AUDIT_VIEW`
-*   **User Administration**: `USER_MANAGE`, `ROLE_ASSIGN`
-*   **Asset Management**: `ASSET_VIEW`, `ASSET_CREATE`, `ASSET_EDIT`, `ASSET_DELETE`
-*   **Incident Management**: `INCIDENT_VIEW`, `INCIDENT_CREATE`, `INCIDENT_MANAGE`, `INCIDENT_RESOLVE`, `INCIDENT_DELETE`
-*   **Threat Intel & Telemetry**: `SERVER_RESTART`, `CLUSTER_SCALE`, `CLOUD_MODIFY`, `VULN_MANAGE`, `COMPLIANCE_VIEW`
-*   **Reporting & Settings**: `REPORT_EXPORT`, `SETTINGS_ACCESS`, `INTEGRATION_CONFIG`
-
-### Roles Setup
-1.  **ROLE_SUPER_ADMIN**: Superuser overriding all permission locks (holds all permissions).
-2.  **ROLE_ADMIN**: Administrative credentials block (holds core configurations & user management).
-3.  **ROLE_SOC_MANAGER**: Incident tracking oversight (holds `ASSET_VIEW`, `INCIDENT_*`, `REPORT_EXPORT`, `AUDIT_VIEW`).
-4.  **ROLE_SECURITY_ANALYST**: Threat detection workflows (holds `ASSET_VIEW`, `INCIDENT_VIEW/CREATE/MANAGE`, `VULN_MANAGE`, `REPORT_EXPORT`).
-5.  **ROLE_INCIDENT_RESPONDER**: On-call ticket remediation (holds `ASSET_VIEW`, `INCIDENT_VIEW/MANAGE/RESOLVE`, `AUDIT_VIEW`).
-6.  **ROLE_INFRA_ENGINEER**: Hardware telemetry coordinator (holds `ASSET_VIEW/CREATE/EDIT/DELETE`, `INCIDENT_VIEW`, `SERVER_RESTART`, `CLUSTER_SCALE`, `CLOUD_MODIFY`, `REPORT_EXPORT`).
-7.  **ROLE_DEVSECOPS**: Continuous compliance configurations (holds `ASSET_VIEW/CREATE/EDIT`, `INCIDENT_VIEW/CREATE/MANAGE`, `VULN_MANAGE`, `SERVER_RESTART`, `CLUSTER_SCALE`, `REPORT_EXPORT`).
-8.  **ROLE_AUDITOR**: External compliance auditing (holds `ASSET_VIEW`, `INCIDENT_VIEW`, `AUDIT_VIEW`, `COMPLIANCE_VIEW`, `REPORT_EXPORT`).
-9.  **ROLE_VIEWER**: Read-only display credentials (holds `ASSET_VIEW`, `INCIDENT_VIEW`).
-
-### Default Bootstrap Credentials
-At application initialization, the system automatically checks for the primary supervisor account and seeds default database roles.
-
-*   **Username**: `admin`
-*   **Password**: `admin123`
-*   **Role**: `ROLE_SUPER_ADMIN`
+| Technology          | Purpose                      |
+| ------------------- | ---------------------------- |
+| React               | User interface               |
+| Vite                | Frontend build tool          |
+| React Router DOM    | Client-side routing          |
+| React Context API   | Authentication/global state  |
+| JavaScript          | Frontend logic               |
+| CSS                 | Responsive UI and animations |
+| SweetAlert2         | Authorization alerts         |
+| Toast Notifications | User feedback                |
 
 ---
 
-## 🗄️ Database Models (JPA Entities)
+# 🔐 Security & Role-Based Access Control
 
-*   `User`: Repositories details on platform accounts, local profile styles (`theme`, `language`, `timezone`), last logins, and active state flags.
-*   `Role`: Roles assigned to platform accounts (associated with permissions).
-*   `Permission`: Singular access tags validating endpoint security authorization.
-*   `Asset`: Hardware registries holding network telemetry details, IP allocations, and host states.
-*   `Incident`: Event log capturing security triggers with severity indices, SLA limits, and technician owners.
-*   `Vulnerability`: Open CVE listings containing host correlations and remediation references.
-*   `AuditLog`: Auto-generated action footprints triggered by `@Auditable` controller checkpoints.
-*   `Alert`: Real-time system notifications showing source files and severity flags.
+SentinelCore-SecureOps implements granular **Role-Based Access Control (RBAC)**.
 
----
+The platform defines:
 
-## 📡 API Endpoint Reference
+* **19 distinct permissions**
+* **9 enterprise operational roles**
 
-| Endpoint | Method | Required Authority | Description |
-| :--- | :--- | :--- | :--- |
-| `/api/users/register` | `POST` | Public | Enrolls a new system user profile. |
-| `/api/users` | `GET` | `USER_MANAGE` | Retrieves system user metadata. |
-| `/api/users/{id}/role` | `PUT` | `ROLE_ASSIGN` | Changes a user's operational role. |
-| `/api/users/{id}/disable` | `PUT` | `USER_MANAGE` | Enables or disables an active user registry. |
-| `/api/users/{id}/reset-password` | `PUT` | `USER_MANAGE` | Performs an administrative password reset. |
-| `/api/users/profile` | `PUT` | Authenticated | Updates current user's profile card. |
-| `/api/assets` | `GET` | `ASSET_VIEW` | Fetches active asset registry list. |
-| `/api/assets/{id}` | `GET` | `ASSET_VIEW` | Fetches a target asset details. |
-| `/api/assets` | `POST` | `ASSET_CREATE` | Registers a new asset host configuration. |
-| `/api/assets/{id}` | `PUT` | `ASSET_EDIT` | Edits asset configuration parameters. |
-| `/api/assets/{id}` | `DELETE` | `ASSET_DELETE` | Retires a network asset from the platform. |
-| `/api/dashboard/stats` | `GET` | Authenticated | Aggregates scorecard metrics. |
-| `/api/dashboard/incidents/status`| `GET` | Authenticated | Aggregates status counts (open/investigating/etc.).|
-| `/api/dashboard/incidents/severity`| `GET` | Authenticated | Aggregates severity counts (critical/high/etc.). |
-| `/api/dashboard/incidents/trend` | `GET` | Authenticated | Fetches incident trends tracking points. |
-| `/api/dashboard/incidents/recent`| `GET` | Authenticated | Fetches recent incident logs. |
-| `/api/dashboard/alerts/recent` | `GET` | Authenticated | Fetches recent real-time system alerts. |
-| `/api/dashboard/audit-logs/recent`| `GET` | Authenticated | Fetches recent audit trails. |
-| `/api/dashboard/user` | `GET` | Authenticated | Returns current session user DTO. |
-| `/api/ai/chat` | `POST` | Public | Sends message to AI SecOps Assistant. |
+Authorization is enforced through **Spring Security** and `@PreAuthorize` guards.
 
 ---
 
-## ⚙️ Installation & Run Guide
+## 🔑 Permissions
 
-### Infrastructure Setup
-Ensure that local database server dependencies are running.
+### Authentication & Auditing
 
-1.  **PostgreSQL Database**:
-    *   Create a local database named `sentinelcore`.
-    *   By default, the server expects connection coordinates to match:
-        *   **Host**: `localhost:5432`
-        *   **User**: `postgres`
-        *   **Password**: Update `spring.datasource.password` in application settings config or provide appropriate environment credentials.
+```text
+AUDIT_VIEW
+```
 
-### Starting Backend Server (8081)
-The backend uses Maven for packaging and dependency retrieval, running on port `8081`.
+### User Administration
 
-1.  Navigate to root project directory.
-2.  Run the application locally using Maven:
-    ```bash
-    mvn spring-boot:run
-    ```
-    *Or use the pre-packaged run executable:*
-    ```bash
-    run-server.bat
-    ```
-3.  The backend will bootstrap the database, insert default roles, seed initial records, and deploy the administrative account properties.
+```text
+USER_MANAGE
+ROLE_ASSIGN
+```
 
-### Starting Frontend Server (5173 / Localhost)
-The client frontend is built on React using Vite.
+### Asset Management
 
-1.  Navigate to the `frontend/` subdirectory:
-    ```bash
-    cd frontend
-    ```
-2.  Install required dependencies:
-    ```bash
-    npm install
-    ```
-3.  Launch the development watcher proxy:
-    ```bash
-    npm run dev
-    ```
-4.  Open your browser and navigate to the port output (usually `http://localhost:5173`).
-5.  Sign in using the bootstrap credentials (`admin` / `admin123`).
+```text
+ASSET_VIEW
+ASSET_CREATE
+ASSET_EDIT
+ASSET_DELETE
+```
+
+### Incident Management
+
+```text
+INCIDENT_VIEW
+INCIDENT_CREATE
+INCIDENT_MANAGE
+INCIDENT_RESOLVE
+INCIDENT_DELETE
+```
+
+### Threat Intelligence & Infrastructure
+
+```text
+SERVER_RESTART
+CLUSTER_SCALE
+CLOUD_MODIFY
+VULN_MANAGE
+COMPLIANCE_VIEW
+```
+
+### Reporting & Configuration
+
+```text
+REPORT_EXPORT
+SETTINGS_ACCESS
+INTEGRATION_CONFIG
+```
+
+---
+
+# 👥 User Roles
+
+## 1. ROLE_SUPER_ADMIN
+
+Full system access with all available permissions.
+
+---
+
+## 2. ROLE_ADMIN
+
+Responsible for:
+
+* User administration
+* System configuration
+* Core administrative operations
+
+---
+
+## 3. ROLE_SOC_MANAGER
+
+Responsible for security operations oversight.
+
+Permissions include:
+
+```text
+ASSET_VIEW
+INCIDENT_*
+REPORT_EXPORT
+AUDIT_VIEW
+```
+
+---
+
+## 4. ROLE_SECURITY_ANALYST
+
+Responsible for security threat detection and analysis.
+
+Permissions include:
+
+```text
+ASSET_VIEW
+INCIDENT_VIEW
+INCIDENT_CREATE
+INCIDENT_MANAGE
+VULN_MANAGE
+REPORT_EXPORT
+```
+
+---
+
+## 5. ROLE_INCIDENT_RESPONDER
+
+Responsible for incident remediation.
+
+Permissions include:
+
+```text
+ASSET_VIEW
+INCIDENT_VIEW
+INCIDENT_MANAGE
+INCIDENT_RESOLVE
+AUDIT_VIEW
+```
+
+---
+
+## 6. ROLE_INFRA_ENGINEER
+
+Responsible for infrastructure and hardware operations.
+
+Permissions include:
+
+```text
+ASSET_VIEW
+ASSET_CREATE
+ASSET_EDIT
+ASSET_DELETE
+INCIDENT_VIEW
+SERVER_RESTART
+CLUSTER_SCALE
+CLOUD_MODIFY
+REPORT_EXPORT
+```
+
+---
+
+## 7. ROLE_DEVSECOPS
+
+Responsible for security and continuous compliance operations.
+
+Permissions include:
+
+```text
+ASSET_VIEW
+ASSET_CREATE
+ASSET_EDIT
+INCIDENT_VIEW
+INCIDENT_CREATE
+INCIDENT_MANAGE
+VULN_MANAGE
+SERVER_RESTART
+CLUSTER_SCALE
+REPORT_EXPORT
+```
+
+---
+
+## 8. ROLE_AUDITOR
+
+Responsible for security and compliance auditing.
+
+Permissions include:
+
+```text
+ASSET_VIEW
+INCIDENT_VIEW
+AUDIT_VIEW
+COMPLIANCE_VIEW
+REPORT_EXPORT
+```
+
+---
+
+## 9. ROLE_VIEWER
+
+Read-only access to:
+
+```text
+ASSET_VIEW
+INCIDENT_VIEW
+```
+
+---
+
+# 🗄️ Database Models
+
+The application uses JPA entities to represent the core security operations data.
+
+### User
+
+Stores:
+
+* User account information
+* Profile settings
+* Theme
+* Language
+* Timezone
+* Last login
+* Active status
+
+### Role
+
+Stores roles assigned to users and their associated permissions.
+
+### Permission
+
+Represents individual authorization permissions.
+
+### Asset
+
+Stores infrastructure assets and telemetry information.
+
+### Incident
+
+Stores security incidents including:
+
+* Severity
+* SLA
+* Technician assignment
+* Status
+* Incident details
+
+### Vulnerability
+
+Stores CVE vulnerability information and remediation references.
+
+### AuditLog
+
+Stores automatically generated audit records.
+
+### Alert
+
+Stores real-time security alerts and severity information.
+
+---
+
+# 📡 REST API Endpoints
+
+| Endpoint                            | Method | Authority     | Description                                |
+| ----------------------------------- | ------ | ------------- | ------------------------------------------ |
+| `/api/users/register`               | POST   | Public        | Registers a new user                       |
+| `/api/users`                        | GET    | USER_MANAGE   | Retrieves users                            |
+| `/api/users/{id}/role`              | PUT    | ROLE_ASSIGN   | Updates user role                          |
+| `/api/users/{id}/disable`           | PUT    | USER_MANAGE   | Enables/disables user                      |
+| `/api/users/{id}/reset-password`    | PUT    | USER_MANAGE   | Resets user password                       |
+| `/api/users/profile`                | PUT    | Authenticated | Updates user profile                       |
+| `/api/assets`                       | GET    | ASSET_VIEW    | Retrieves assets                           |
+| `/api/assets/{id}`                  | GET    | ASSET_VIEW    | Retrieves asset details                    |
+| `/api/assets`                       | POST   | ASSET_CREATE  | Creates an asset                           |
+| `/api/assets/{id}`                  | PUT    | ASSET_EDIT    | Updates an asset                           |
+| `/api/assets/{id}`                  | DELETE | ASSET_DELETE  | Deletes an asset                           |
+| `/api/dashboard/stats`              | GET    | Authenticated | Retrieves dashboard statistics             |
+| `/api/dashboard/incidents/status`   | GET    | Authenticated | Retrieves incident status counts           |
+| `/api/dashboard/incidents/severity` | GET    | Authenticated | Retrieves incident severity counts         |
+| `/api/dashboard/incidents/trend`    | GET    | Authenticated | Retrieves incident trends                  |
+| `/api/dashboard/incidents/recent`   | GET    | Authenticated | Retrieves recent incidents                 |
+| `/api/dashboard/alerts/recent`      | GET    | Authenticated | Retrieves recent alerts                    |
+| `/api/dashboard/audit-logs/recent`  | GET    | Authenticated | Retrieves recent audit logs                |
+| `/api/dashboard/user`               | GET    | Authenticated | Retrieves current user                     |
+| `/api/ai/chat`                      | POST   | Public        | Sends a message to the AI SecOps assistant |
+
+---
+
+# ⚙️ Local Installation & Setup
+
+## Prerequisites
+
+Install the following:
+
+* Java 17
+* Maven
+* Node.js
+* npm
+* PostgreSQL
+* Git
+
+---
+
+# 🗄️ PostgreSQL Setup
+
+Create a PostgreSQL database:
+
+```sql
+CREATE DATABASE sentinelcore;
+```
+
+The backend expects PostgreSQL to be available at:
+
+```text
+Host: localhost
+Port: 5432
+Database: sentinelcore
+User: postgres
+```
+
+Configure your PostgreSQL password through the application's configuration or environment variables.
+
+---
+
+# 🚀 Running the Backend
+
+Navigate to the project root:
+
+```bash
+mvn spring-boot:run
+```
+
+Alternatively:
+
+```bash
+run-server.bat
+```
+
+The backend runs on:
+
+```text
+http://localhost:8081
+```
+
+During startup, the application initializes:
+
+* Database tables
+* Default roles
+* Permissions
+* Initial records
+* Administrative account
+
+---
+
+# 💻 Running the Frontend
+
+Navigate to the frontend directory:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The frontend normally runs on:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# 🔑 Default Local Login
+
+```text
+Username: admin
+Password: admin123
+Role: ROLE_SUPER_ADMIN
+```
+
+> ⚠️ For security reasons, do not use default credentials in a real production deployment.
+
+---
+
+# 🌐 Deployment
+
+The frontend application is deployed and accessible online at:
+
+**Live Application:**
+https://sentinel-core-secure-ops-f7k2.vercel.app/login
+
+The project architecture separates the frontend, backend, database, and external services so that each component can be independently configured and deployed.
+
+For local development, the backend runs on port `8081` and the React/Vite frontend runs on port `5173`.
+
+---
+
+# 📁 Project Structure
+
+```text
+SentinelCore-SecureOps/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.js
+│
+├── src/
+│   └── main/
+│       ├── java/
+│       │   └── ...
+│       └── resources/
+│           └── application.properties
+│
+├── pom.xml
+├── run-server.bat
+└── README.md
+```
+
+---
+
+# 🔄 Application Workflow
+
+```text
+User
+  │
+  ▼
+React Frontend
+  │
+  ▼
+Authentication / RBAC
+  │
+  ▼
+Spring Security
+  │
+  ▼
+REST Controllers
+  │
+  ▼
+Business Services
+  │
+  ├──► Incident Management
+  ├──► Asset Management
+  ├──► Vulnerability Management
+  ├──► Compliance
+  ├──► Audit Logging
+  ├──► PDF Reports
+  └──► Email Notifications
+  │
+  ▼
+Spring Data JPA
+  │
+  ▼
+PostgreSQL
+```
+
+---
+
+# 🎯 Project Objectives
+
+The main objectives of SentinelCore-SecureOps are to:
+
+1. Centralize security operations monitoring.
+2. Manage security incidents through structured workflows.
+3. Monitor infrastructure assets.
+4. Track vulnerabilities and remediation activities.
+5. Implement granular role-based access control.
+6. Maintain detailed audit trails.
+7. Support compliance monitoring.
+8. Generate automated security reports.
+9. Provide email notifications for critical events.
+10. Assist security teams through an AI-powered assistant.
+
+---
+
+# 🧪 Security Capabilities
+
+The platform demonstrates several enterprise security concepts:
+
+* Authentication
+* Authorization
+* RBAC
+* Permission-based access control
+* Audit logging
+* Incident management
+* Vulnerability management
+* Compliance monitoring
+* Security alerts
+* Infrastructure monitoring
+* Secure REST APIs
+
+---
+
+# 📈 Future Enhancements
+
+Potential future improvements include:
+
+* Real-time WebSocket-based security alerts
+* SIEM integration
+* Cloud provider integrations
+* Advanced threat intelligence feeds
+* Automated incident response playbooks
+* ML-based anomaly detection
+* Container/Kubernetes security monitoring
+* Multi-factor authentication
+* OAuth2/OpenID Connect integration
+* Advanced security analytics dashboards
+
+---
+
+# 👨‍💻 Project Information
+
+**Project:** SentinelCore-SecureOps
+**Category:** Cloud Security / SecOps / Security Operations
+**Architecture:** Full-Stack Web Application
+**Backend:** Spring Boot 3 + Java 17
+**Frontend:** React + Vite
+**Database:** PostgreSQL
+**Security:** Spring Security + RBAC
+**Deployment:** Vercel frontend deployment
+
+---
+
+# 📜 License
+
+This project is developed for educational, academic, and demonstration purposes.
